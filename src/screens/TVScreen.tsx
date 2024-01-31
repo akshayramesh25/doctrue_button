@@ -3,10 +3,11 @@ import { Carousel } from "react-responsive-carousel";
 import { Logo } from "../assets/icons/Icons";
 import moment from "moment";
 import { useData } from "../lib/Context";
+import LiveQueue from "./LiveQueue";
 
 const TVScreen = () => {
   const [index, setIndex] = useState(0);
-  const { hospData } = useData();
+  const { hospData, doctorsData } = useData();
 
   return (
     <>
@@ -31,7 +32,9 @@ const TVScreen = () => {
             showIndicators={false}
             onChange={setIndex}
           >
-            {/* <LiveQueue key={index} dmcl={dmcl} session={session} /> */}
+            {doctorsData?.map((doc, index) => (
+              <LiveQueue key={index} mapping_id={doc.mapping_id} />
+            ))}
           </Carousel>
         </div>
       ) : (

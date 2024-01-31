@@ -53,7 +53,6 @@ type DataProviderProps = {
 
 const Context = ({ children }: DataProviderProps) => {
   const navigate = useNavigate();
-  const emailRegex: RegExp = /^[\w-]+@[a-zA-Z\d-]+\.[a-zA-Z]{2,}$/;
   const accessToken = String(localStorage.getItem("accessToken"));
   const refreshToken = String(localStorage.getItem("refreshToken"));
   const hospitalID = Number(localStorage.getItem("hospID"));
@@ -110,7 +109,7 @@ const Context = ({ children }: DataProviderProps) => {
 
   const handleLogin = async ({ email, password }: LoginData, event: any) => {
     event.preventDefault();
-    if (!emailRegex.test(email)) {
+    if (!email) {
       toast.error("Invalid email.");
     } else if (password.length <= 7) {
       toast.error("Password needs to have more than 8 characters.");
