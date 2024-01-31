@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Carousel } from "react-responsive-carousel";
 import { Logo } from "../assets/icons/Icons";
 import moment from "moment";
@@ -6,7 +6,6 @@ import { useData } from "../lib/Context";
 import LiveQueue from "./LiveQueue";
 
 const TVScreen = () => {
-  const [index, setIndex] = useState(0);
   const { hospData, doctorsData } = useData();
 
   return (
@@ -30,7 +29,6 @@ const TVScreen = () => {
             showThumbs={false}
             showStatus={false}
             showIndicators={false}
-            onChange={setIndex}
           >
             {doctorsData?.map((doc, index) => (
               <LiveQueue key={index} mapping_id={doc.mapping_id} />

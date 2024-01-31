@@ -438,8 +438,12 @@ export const getQueueByMappingId = async (
       headers: header(),
     });
     return res;
-  } catch (error) {
-    console.error(error);
+  } catch (error: any) {
+    if (error.response || error.response.status === 401) {
+      return error.response;
+    } else {
+      console.error(error);
+    }
   }
 };
 
