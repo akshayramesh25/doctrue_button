@@ -14,7 +14,7 @@ const Signin = () => {
 
   useEffect(() => {
     if (hospData) {
-      navigate("/dashboard");
+      navigate("/tvscreen");
     }
   }, [hospData, navigate]);
 

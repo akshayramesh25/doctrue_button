@@ -121,7 +121,7 @@ const Context = ({ children }: DataProviderProps) => {
         localStorage.setItem("accessToken", res.data.result.access_token);
         localStorage.setItem("refreshToken", res.data.result.refresh_token);
         localStorage.setItem("hospID", res.data.result.hospital_id);
-        navigate("/dashboard");
+        navigate("/tvscreen");
       } else toast.error("Wrong email/password entered.");
     }
   };

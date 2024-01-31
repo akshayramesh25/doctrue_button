@@ -2,6 +2,7 @@ import React from "react";
 import "./App.css";
 import { BrowserRouter } from "react-router-dom";
 import AppRoutes from "./AppRoutes";
+import "react-responsive-carousel/lib/styles/carousel.min.css";
 import "react-toastify/dist/ReactToastify.css";
 import Context from "./lib/Context";
 
