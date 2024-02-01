@@ -1,21 +1,25 @@
-import React from "react";
+import React, { useState } from "react";
 import { Carousel } from "react-responsive-carousel";
 import { Logo } from "../assets/icons/Icons";
 import moment from "moment";
 import { useData } from "../lib/Context";
 import LiveQueue from "./LiveQueue";
+import { useInterval } from "../lib/useInterval";
 
 const TVScreen = () => {
   const { hospData, doctorsData } = useData();
+  const [time, setTime] = useState(moment().format("hh:mm A"));
+
+  useInterval(async () => {
+    setTime(moment().format("hh:mm A"));
+  }, 60000);
 
   return (
     <>
       {hospData !== undefined ? (
         <div className="flex flex-col h-screen">
           <div className="flex flex-row justify-between mt-5">
-            <p className="font-semibold text-3xl ml-10">
-              {moment().format("hh:mm A")}
-            </p>
+            <p className="font-semibold text-3xl ml-10">{time}</p>
             <img
               src={require("../assets/images/DTlogo.png")}
               alt="Queue empty"
