@@ -14,6 +14,7 @@ import {
   hosptialLogin,
 } from "./apis";
 import moment from "moment";
+import { deleteCookie, getCookie, setCookie } from "./funcs";
 
 interface DataContextInterface {
   handleLogin: ({ email, password }: LoginData, event: any) => Promise<void>;
@@ -53,9 +54,9 @@ type DataProviderProps = {
 
 const Context = ({ children }: DataProviderProps) => {
   const navigate = useNavigate();
-  const accessToken = String(localStorage.getItem("accessToken"));
-  const refreshToken = String(localStorage.getItem("refreshToken"));
-  const hospitalID = Number(localStorage.getItem("hospID"));
+  const accessToken = String(getCookie("accessToken"));
+  const refreshToken = String(getCookie("refreshToken"));
+  const hospitalID = Number(getCookie("hospID"));
 
   const [hospData, setHospData] = useState<HospitalProfileData>();
   const [doctorsData, setDoctorsData] = useState<Array<DocProfileData>>();
@@ -69,7 +70,13 @@ const Context = ({ children }: DataProviderProps) => {
 
   useEffect(() => {
     const onAuthStateChanged = async () => {
-      if (hospitalID) {
+      if (!accessToken || !refreshToken || !hospitalID) {
+        console.log("Cookies not present, will logout.");
+        deleteCookie("accessToken");
+        deleteCookie("refreshToken");
+        deleteCookie("hospID");
+        navigate("/");
+      } else if (accessToken && refreshToken && hospitalID) {
         const hosp_data = await getHosptialDetails(hospitalID);
 
         if (hosp_data?.status === 200) {
@@ -81,13 +88,11 @@ const Context = ({ children }: DataProviderProps) => {
           const refresh_data = await hitRefreshToken(accessToken, refreshToken);
           if (refresh_data?.status === 200) {
             console.log("Refresh");
-            localStorage.setItem(
-              "accessToken",
-              refresh_data.data.result.access_token
-            );
-            localStorage.setItem(
+            setCookie("accessToken", refresh_data.data.result.access_token, 30);
+            setCookie(
               "refreshToken",
-              refresh_data.data.result.refresh_token
+              refresh_data.data.result.refresh_token,
+              30
             );
             const hosp_data = await getHosptialDetails(hospitalID);
             if (hosp_data?.status === 200) setHospData(hosp_data.data.result);
@@ -95,9 +100,9 @@ const Context = ({ children }: DataProviderProps) => {
             const doc_data = await getDoctorListByHospitalId(hospitalID);
             if (doc_data?.status === 200) setDoctorsData(doc_data.data.result);
           } else {
-            localStorage.removeItem("accessToken");
-            localStorage.removeItem("refreshToken");
-            localStorage.removeItem("hospID");
+            deleteCookie("accessToken");
+            deleteCookie("refreshToken");
+            deleteCookie("hospID");
             navigate("/");
           }
         }
@@ -117,18 +122,18 @@ const Context = ({ children }: DataProviderProps) => {
       const res = await hosptialLogin({ email, password });
       if (res?.status === 200) {
         toast.success("Sign in successful!");
-        localStorage.setItem("accessToken", res.data.result.access_token);
-        localStorage.setItem("refreshToken", res.data.result.refresh_token);
-        localStorage.setItem("hospID", res.data.result.hospital_id);
+        setCookie("accessToken", res.data.result.access_token, 30);
+        setCookie("refreshToken", res.data.result.refresh_token, 30);
+        setCookie("hospID", res.data.result.hospital_id.toString(), 30);
         navigate("/tvscreen");
       } else toast.error("Wrong email/password entered.");
     }
   };
 
   const handleLogout = async () => {
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("refreshToken");
-    localStorage.removeItem("hospID");
+    deleteCookie("accessToken");
+    deleteCookie("refreshToken");
+    deleteCookie("hospID");
     setHospData(undefined);
     navigate("/");
   };
