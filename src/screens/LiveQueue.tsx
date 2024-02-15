@@ -11,6 +11,7 @@ import { DocAvailabilityData, DocProfileData, QueueData } from "../lib/types";
 import moment from "moment";
 import { useInterval } from "../lib/useInterval";
 import { useNavigate } from "react-router-dom";
+import { deleteCookie, setCookie } from "../lib/funcs";
 
 const LiveQueue = ({ mapping_id }: { mapping_id: number }) => {
   const { accessToken, refreshToken, hospData, SelectedDate, setSelectedDate } =
@@ -49,14 +50,8 @@ const LiveQueue = ({ mapping_id }: { mapping_id: number }) => {
         const refresh_data = await hitRefreshToken(accessToken, refreshToken);
         if (refresh_data?.status === 200) {
           console.log("Refresh");
-          localStorage.setItem(
-            "accessToken",
-            refresh_data.data.result.access_token
-          );
-          localStorage.setItem(
-            "refreshToken",
-            refresh_data.data.result.refresh_token
-          );
+          setCookie("accessToken", refresh_data.data.result.access_token, 30);
+          setCookie("refreshToken", refresh_data.data.result.refresh_token, 30);
           const res = await getDoctorAvailability(mapping_id);
           if (res?.status === 200) {
             setDocAvail(res.data.result.doctor_availability);
@@ -120,14 +115,13 @@ const LiveQueue = ({ mapping_id }: { mapping_id: number }) => {
   //       const refresh_data = await hitRefreshToken(accessToken, refreshToken);
   //       if (refresh_data?.status === 200) {
   //         console.log("Refresh");
-  //         localStorage.setItem(
-  //           "accessToken",
-  //           refresh_data.data.result.access_token
-  //         );
-  //         localStorage.setItem(
-  //           "refreshToken",
-  //           refresh_data.data.result.refresh_token
-  //         );
+  //
+  // setCookie("accessToken", refresh_data.data.result.access_token, 30);
+  // setCookie(
+  //   "refreshToken",
+  //   refresh_data.data.result.refresh_token,
+  //   30
+  // );
   //         const api_data = await getQueueByMappingId(mapping_id, SelectedDate);
   //         if (api_data?.status === 200) setInClinicData(api_data.data.result);
   //       }
@@ -143,20 +137,14 @@ const LiveQueue = ({ mapping_id }: { mapping_id: number }) => {
         const refresh_data = await hitRefreshToken(accessToken, refreshToken);
         if (refresh_data?.status === 200) {
           console.log("Refresh");
-          localStorage.setItem(
-            "accessToken",
-            refresh_data.data.result.access_token
-          );
-          localStorage.setItem(
-            "refreshToken",
-            refresh_data.data.result.refresh_token
-          );
+          setCookie("accessToken", refresh_data.data.result.access_token, 30);
+          setCookie("refreshToken", refresh_data.data.result.refresh_token, 30);
           const api_data = await getQueueByMappingId(mapping_id, SelectedDate);
           if (api_data?.status === 200) setInClinicData(api_data.data.result);
         } else {
-          localStorage.removeItem("accessToken");
-          localStorage.removeItem("refreshToken");
-          localStorage.removeItem("hospID");
+          deleteCookie("accessToken");
+          deleteCookie("refreshToken");
+          deleteCookie("hospID");
           navigate("/");
         }
       }
