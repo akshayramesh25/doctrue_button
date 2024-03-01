@@ -15,8 +15,8 @@ export type CreateDocProfileData = {
 };
 
 export type DocProfileData = {
-  doctor_id?: number;
-  mapping_id: number;
+  doctor_id?: string;
+  mapping_id: string;
   profile_picture: string;
   full_name: string;
   gender: string;
@@ -33,7 +33,7 @@ export type DocProfileData = {
 };
 
 export type HospitalProfileData = {
-  hospital_id: number;
+  hospital_id: string;
   logo: string;
   name: string;
   address: string;
@@ -41,12 +41,12 @@ export type HospitalProfileData = {
   password: string;
   email: string;
   timing: string;
-  parent_hospital_id: number;
+  parent_hospital_id: string;
   created_by: number;
 };
 
 export type DocAvailabilityData = {
-  availability_id: number;
+  availability_id: string;
   day_of_week: number;
   start_time: string;
   end_time: string;
@@ -57,9 +57,9 @@ export type DocAvailabilityData = {
 };
 
 export type QueueData = {
-  booking_id: number;
+  booking_id: string;
   token_number: number;
-  mapping_id: number;
+  mapping_id: string;
   patient_id: string;
   full_name: string;
   email: string;
@@ -74,15 +74,15 @@ export type QueueData = {
   booking_time: string;
   is_confirmed: boolean;
   status: number;
-  availability_id: number;
+  availability_id: string;
   last_updated_at: string;
   updated_at: string;
   check_in_time: string;
 };
 
 export type AddDocData = {
-  hospitalID: number;
-  doctor_id: number;
+  hospitalID: string;
+  doctor_id: string;
   doctor_availability: {
     day_of_week: number;
     start_time: string;
@@ -93,7 +93,7 @@ export type AddDocData = {
 };
 
 export type addBookingData = {
-  mapping_id: number;
+  mapping_id: string;
   trimName: string;
   gender: string;
   phno: string;
@@ -101,18 +101,18 @@ export type addBookingData = {
   type: string;
   booked_date: string;
   booked_slot_time: string;
-  availability_id: number;
+  availability_id: string;
   start_time: string;
   end_time: string;
 };
 
 export type UpdateQueueData = {
-  bookingId: number;
+  bookingId: string;
   status: number;
 };
 
 export interface EachSession {
-  availability_id?: number;
+  availability_id?: string;
   day_of_week: number; // 1 for Sunday, 2 for Monday, ..., 7 for Saturday
   start_time: string;
   end_time: string;
@@ -122,7 +122,7 @@ export interface EachSession {
 }
 
 export interface EditSession {
-  availability_id: number;
+  availability_id: string;
   day_of_week: number; // 1 for Sunday, 2 for Monday, ..., 7 for Saturday
   start_time: string;
   end_time: string;
@@ -156,7 +156,7 @@ export interface WeekSchedule {
 }
 
 export interface AvailabilitySlot {
-  availability_id: number;
+  availability_id: string;
   day_of_week: number;
   start_time: string;
   end_time: string;
@@ -168,7 +168,7 @@ export interface AvailabilitySlot {
 }
 
 export interface EditAvailabilitySlot {
-  availability_id?: number;
+  availability_id?: string;
   day_of_week: number;
   start_time: string;
   end_time: string;
@@ -178,7 +178,7 @@ export interface EditAvailabilitySlot {
 }
 
 export interface PatientsData {
-  booking_id: number;
+  booking_id: string;
   patient_id: string;
   full_name: string;
   email: string;

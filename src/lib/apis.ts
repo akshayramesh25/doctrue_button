@@ -141,7 +141,7 @@ export const createHosptialProfile = async ({
 };
 
 //GET HOSPITAL DETAILS
-export const getHosptialDetails = async (id: number) => {
+export const getHosptialDetails = async (id: string) => {
   try {
     const res = await axios.get(`${URLS.hospital}/${id}`, {
       headers: header(),
@@ -204,7 +204,7 @@ export const hitRefreshToken = async (
 //HospitalDoctorMapping
 
 //GET doctor availability using mapping id
-export const getDoctorAvailability = async (id: number) => {
+export const getDoctorAvailability = async (id: string) => {
   try {
     const res = await axios.get(`${URLS.hospitalDoctorMap}/${id}`, {
       headers: header(),
@@ -244,7 +244,7 @@ export const addDoctorToHospital = async ({
 };
 
 //GET list of doctors by hospital id
-export const getDoctorListByHospitalId = async (id: number) => {
+export const getDoctorListByHospitalId = async (id: string) => {
   try {
     const res = await axios.get(`${URLS.getDoctorList}/${id}/doctors`, {
       headers: header(),
@@ -429,7 +429,7 @@ export const getBookingCount = async (
 
 //Get queue by mapping id
 export const getQueueByMappingId = async (
-  id: number,
+  id: string,
   date: string | undefined
 ) => {
   try {
@@ -448,7 +448,7 @@ export const getQueueByMappingId = async (
 };
 
 //Patient check-in by booking id
-export const checkInPatientByBookingId = async (bookingId: number) => {
+export const checkInPatientByBookingId = async (bookingId: string) => {
   const res = await axios.post(`${URLS.checkIn}`, { bookingId: bookingId });
   return res;
 };

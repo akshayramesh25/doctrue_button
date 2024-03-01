@@ -18,7 +18,7 @@ import { deleteCookie, getCookie, setCookie } from "./funcs";
 
 interface DataContextInterface {
   handleLogin: ({ email, password }: LoginData, event: any) => Promise<void>;
-  hospitalID: number;
+  hospitalID: string;
   accessToken: string;
   refreshToken: string;
   handleLogout: () => Promise<any>;
@@ -56,7 +56,7 @@ const Context = ({ children }: DataProviderProps) => {
   const navigate = useNavigate();
   const accessToken = String(getCookie("accessToken"));
   const refreshToken = String(getCookie("refreshToken"));
-  const hospitalID = Number(getCookie("hospID"));
+  const hospitalID = String(getCookie("hospID"));
 
   const [hospData, setHospData] = useState<HospitalProfileData>();
   const [doctorsData, setDoctorsData] = useState<Array<DocProfileData>>();
@@ -124,7 +124,7 @@ const Context = ({ children }: DataProviderProps) => {
         toast.success("Sign in successful!");
         setCookie("accessToken", res.data.result.access_token, 30);
         setCookie("refreshToken", res.data.result.refresh_token, 30);
-        setCookie("hospID", res.data.result.hospital_id.toString(), 30);
+        setCookie("hospID", res.data.result.hospital_id, 30);
         navigate("/tvscreen");
       } else toast.error("Wrong email/password entered.");
     }
