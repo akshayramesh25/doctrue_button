@@ -41,7 +41,7 @@ const Signin = () => {
           </p>
           <p className="text-dark text-xs md:text-sm mb-2">Email Address</p>
           <input
-            className="rounded-lg px-3 py-2 border-[0.5px] border-sbBorder w-full mb-4"
+            className="rounded-lg px-3 py-2 border-[0.5px] border-sbBorder w-full mb-4 focus:outline-none"
             placeholder="Enter Email Address"
             type="email"
             value={email}
@@ -53,7 +53,7 @@ const Signin = () => {
           <p className="text-dark text-xs md:text-sm mb-2">Password</p>
           <div className="flex justify-between items-center rounded-lg px-3 py-2 border-[0.5px] border-sbBorder w-full mb-9 bg-white">
             <input
-              className="border-0 p-0 focus:ring-0 w-full mr-5"
+              className="border-0 p-0 focus:ring-0 w-full mr-5 focus:outline-none"
               placeholder="8+ characters"
               type={visible ? "text" : "password"}
               value={password}

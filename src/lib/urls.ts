@@ -1,28 +1,28 @@
 export const URLS = {
-  doctor: "https://api.doctrue.in/api/v1/doctor",
+  doctor: "https://test.doctrue.in/api/v1/doctor",
 
-  hosptialLogin: "https://api.doctrue.in/api/v1/hospital/auth/login",
+  hosptialLogin: "https://test.doctrue.in/api/v1/hospital/auth/login",
 
-  hospital: "https://api.doctrue.in/api/v1/hospital",
+  hospital: "https://test.doctrue.in/api/v1/hospital",
 
   hospitalDoctorMap:
-    "https://api.doctrue.in/api/v1/hospital/doctor/availability",
+    "https://test.doctrue.in/api/v1/hospital/doctor/availability",
 
-  getDoctorList: "https://api.doctrue.in/api/v1/hospital",
+  getDoctorList: "https://test.doctrue.in/api/v1/hospital",
 
-  booking: "https://api.doctrue.in/api/v1/booking",
+  booking: "https://test.doctrue.in/api/v1/booking",
 
-  getQueue: "https://api.doctrue.in/api/v1/queue",
+  getQueue: "https://test.doctrue.in/api/v1/queue",
 
-  checkIn: "https://api.doctrue.in/api/v1/queue/check-in",
+  checkIn: "https://test.doctrue.in/api/v1/queue/check-in",
 
-  queueStatus: "https://api.doctrue.in/api/v1/queue/status",
+  queueStatus: "https://test.doctrue.in/api/v1/queue/status",
 
-  getPatientsMapping: "https://api.doctrue.in/api/v1/patient/doctor",
+  getPatientsMapping: "https://test.doctrue.in/api/v1/patient/doctor",
 
-  getPatientsHospital: "https://api.doctrue.in/api/v1/patient/hospital",
+  getPatientsHospital: "https://test.doctrue.in/api/v1/patient/hospital",
 
-  refreshToken: "https://api.doctrue.in/api/v1/hospital/auth/refresh",
+  refreshToken: "https://test.doctrue.in/api/v1/hospital/auth/refresh",
 
-  changePW: "https://api.doctrue.in/api/v1/hospital/auth/changePassword",
+  changePW: "https://test.doctrue.in/api/v1/hospital/auth/changePassword",
 };

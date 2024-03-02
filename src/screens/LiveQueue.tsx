@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import Patient from "../components/Patient";
 import { useData } from "../lib/Context";
 import {
-  getBookingCount,
   getDoctorAvailability,
   getQueueByMappingId,
   hitRefreshToken,
@@ -13,7 +12,7 @@ import { useInterval } from "../lib/useInterval";
 import { useNavigate } from "react-router-dom";
 import { deleteCookie, setCookie } from "../lib/funcs";
 
-const LiveQueue = ({ mapping_id }: { mapping_id: number }) => {
+const LiveQueue = ({ mapping_id }: { mapping_id: string }) => {
   const { accessToken, refreshToken, hospData, SelectedDate, setSelectedDate } =
     useData();
   const [docDetails, setDocDetails] = useState<DocProfileData>();
