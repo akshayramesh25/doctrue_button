@@ -65,7 +65,7 @@ const LiveQueue = ({ mapping_id }: { mapping_id: string }) => {
   useEffect(() => {
     if (docAvail !== undefined) {
       const now = moment();
-      //   const now = moment().set({ hour: 19, minute: 0 });
+      // const now = moment().set({ hour: 11, minute: 0 });
       const currSession = docAvail
         .filter((i) => i.day_of_week === index)
         .filter((item) => {
