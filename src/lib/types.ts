@@ -30,6 +30,7 @@ export type DocProfileData = {
   created_by: string;
   updated_by_user_id: number;
   updated_at?: string;
+  created_at: string;
 };
 
 export type HospitalProfileData = {

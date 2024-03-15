@@ -149,7 +149,9 @@ const LiveQueue = ({ mapping_id }: { mapping_id: string }) => {
       }
     }
   }, 5000);
+
   console.log(inClinicData);
+
   return (
     <div>
       <p className="mt-3 text-black font-medium text-3xl">

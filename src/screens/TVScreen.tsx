@@ -7,12 +7,17 @@ import LiveQueue from "./LiveQueue";
 import { useInterval } from "../lib/useInterval";
 
 const TVScreen = () => {
-  const { hospData, doctorsData } = useData();
+  const { hospitalID, hospData, doctorsData } = useData();
   const [time, setTime] = useState(moment().format("hh:mm A"));
 
   useInterval(async () => {
     setTime(moment().format("hh:mm A"));
   }, 60000);
+  console.log(
+    doctorsData?.sort(
+      (a, b) => moment(a.created_at).valueOf() - moment(b.created_at).valueOf()
+    )
+  );
 
   return (
     <>
@@ -34,9 +39,20 @@ const TVScreen = () => {
             showStatus={false}
             showIndicators={false}
           >
-            {doctorsData?.map((doc, index) => (
-              <LiveQueue key={index} mapping_id={doc.mapping_id} />
-            ))}
+            {hospitalID === "fa577fb4-6353-44ae-9a41-0d362d0ab5ce"
+              ? doctorsData
+                  ?.sort(
+                    (a, b) =>
+                      moment(a.created_at).valueOf() -
+                      moment(b.created_at).valueOf()
+                  )
+                  .slice(0, 2)
+                  .map((doc, index) => (
+                    <LiveQueue key={index} mapping_id={doc.mapping_id} />
+                  ))
+              : doctorsData?.map((doc, index) => (
+                  <LiveQueue key={index} mapping_id={doc.mapping_id} />
+                ))}
           </Carousel>
         </div>
       ) : (
