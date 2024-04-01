@@ -158,14 +158,19 @@ const LiveQueue = ({ mapping_id }: { mapping_id: string }) => {
       <p>{session?.label}</p>
       {moment().isBetween(session?.start_time, session?.end_time) ? (
         <>
-          {inClinicData?.filter((item) => item.mapping_id === mapping_id)
-            .length ? (
+          {inClinicData?.filter(
+            (item) =>
+              item.mapping_id === mapping_id &&
+              item.availability_id === session?.value
+          ).length ? (
             <>
               <p
                 className={`${
                   inClinicData?.filter(
                     (item) =>
-                      item.status === 2 && item.mapping_id === mapping_id
+                      item.status === 2 &&
+                      item.mapping_id === mapping_id &&
+                      item.availability_id === session?.value
                   ).length !== 0
                     ? "text-green"
                     : "text-darkBlue"
@@ -175,12 +180,17 @@ const LiveQueue = ({ mapping_id }: { mapping_id: string }) => {
               </p>
               <div>
                 {inClinicData?.filter(
-                  (item) => item.status === 2 && item.mapping_id === mapping_id
+                  (item) =>
+                    item.status === 2 &&
+                    item.mapping_id === mapping_id &&
+                    item.availability_id === session?.value
                 ).length !== 0 ? (
                   inClinicData
                     ?.filter(
                       (item) =>
-                        item.status === 2 && item.mapping_id === mapping_id
+                        item.status === 2 &&
+                        item.mapping_id === mapping_id &&
+                        item.availability_id === session?.value
                     )
                     .map((item, index) => {
                       return (
@@ -199,7 +209,10 @@ const LiveQueue = ({ mapping_id }: { mapping_id: string }) => {
               <p className=" font-semibold text-xl">Next in Queue</p>
               <div>
                 {inClinicData?.filter(
-                  (item) => item.status === 1 && item.mapping_id === mapping_id
+                  (item) =>
+                    item.status === 1 &&
+                    item.mapping_id === mapping_id &&
+                    item.availability_id === session?.value
                 ).length !== 0 ? (
                   inClinicData
                     ?.filter((item) => item.status === 1)
