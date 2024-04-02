@@ -30,7 +30,13 @@ const LiveQueue = ({ mapping_id }: { mapping_id: string }) => {
   const fetchQueueData = async () => {
     const inclinic_data = await getQueueByMappingId(mapping_id, SelectedDate);
     if (inclinic_data?.status === 200) {
-      setInClinicData(inclinic_data.data.result);
+      setInClinicData(
+        inclinic_data.data.result.filter(
+          (item: QueueData) =>
+            item.mapping_id === mapping_id &&
+            item.availability_id === session?.value
+        )
+      );
     } else setInClinicData(undefined);
   };
 
@@ -95,43 +101,18 @@ const LiveQueue = ({ mapping_id }: { mapping_id: string }) => {
     }
   }, [, SelectedDate, docAvail]);
 
-  // SCOPE FOR OPTIMIZATION
-
-  //   useInterval(async () => {
-  //     const sesh = Number(session?.value);
-  //     const res = await getBookingCount(mapping_id, SelectedDate, sesh, 1);
-  //     if (res?.status === 200) {
-  //       const count = Number(res.data.result[0].bookings_count);
-  //       console.log(
-  //         count,
-  //         inClinicData?.filter((item) => item.status === 1).length
-  //       );
-  //       if (inClinicData?.filter((item) => item.status === 1).length !== count) {
-  //         const api_data = await getQueueByMappingId(mapping_id, SelectedDate);
-  //         if (api_data?.status === 200) setInClinicData(api_data.data.result);
-  //       }
-  //     } else if (res?.status === 401) {
-  //       const refresh_data = await hitRefreshToken(accessToken, refreshToken);
-  //       if (refresh_data?.status === 200) {
-  //         console.log("Refresh");
-  //
-  // setCookie("accessToken", refresh_data.data.result.access_token, 30);
-  // setCookie(
-  //   "refreshToken",
-  //   refresh_data.data.result.refresh_token,
-  //   30
-  // );
-  //         const api_data = await getQueueByMappingId(mapping_id, SelectedDate);
-  //         if (api_data?.status === 200) setInClinicData(api_data.data.result);
-  //       }
-  //     }
-  //   }, 5000);
-
   useInterval(async () => {
     if (moment().isBetween(session?.start_time, session?.end_time)) {
       const res = await getQueueByMappingId(mapping_id, SelectedDate);
       if (res?.status === 200) {
-        setInClinicData(res.data.result);
+        console.log("fetch");
+        setInClinicData(
+          res.data.result.filter(
+            (item: QueueData) =>
+              item.mapping_id === mapping_id &&
+              item.availability_id === session?.value
+          )
+        );
       } else if (res?.status === 401) {
         const refresh_data = await hitRefreshToken(accessToken, refreshToken);
         if (refresh_data?.status === 200) {
@@ -139,7 +120,14 @@ const LiveQueue = ({ mapping_id }: { mapping_id: string }) => {
           setCookie("accessToken", refresh_data.data.result.access_token, 30);
           setCookie("refreshToken", refresh_data.data.result.refresh_token, 30);
           const api_data = await getQueueByMappingId(mapping_id, SelectedDate);
-          if (api_data?.status === 200) setInClinicData(api_data.data.result);
+          if (api_data?.status === 200)
+            setInClinicData(
+              api_data.data.result.filter(
+                (item: QueueData) =>
+                  item.mapping_id === mapping_id &&
+                  item.availability_id === session?.value
+              )
+            );
         } else {
           deleteCookie("accessToken");
           deleteCookie("refreshToken");
@@ -158,20 +146,11 @@ const LiveQueue = ({ mapping_id }: { mapping_id: string }) => {
       <p>{session?.label}</p>
       {moment().isBetween(session?.start_time, session?.end_time) ? (
         <>
-          {inClinicData?.filter(
-            (item) =>
-              item.mapping_id === mapping_id &&
-              item.availability_id === session?.value
-          ).length ? (
+          {inClinicData?.length ? (
             <>
               <p
                 className={`${
-                  inClinicData?.filter(
-                    (item) =>
-                      item.status === 2 &&
-                      item.mapping_id === mapping_id &&
-                      item.availability_id === session?.value
-                  ).length !== 0
+                  inClinicData?.filter((item) => item.status === 2).length !== 0
                     ? "text-green"
                     : "text-darkBlue"
                 } mt-5 font-semibold text-xl`}
@@ -179,19 +158,10 @@ const LiveQueue = ({ mapping_id }: { mapping_id: string }) => {
                 On Going
               </p>
               <div>
-                {inClinicData?.filter(
-                  (item) =>
-                    item.status === 2 &&
-                    item.mapping_id === mapping_id &&
-                    item.availability_id === session?.value
-                ).length !== 0 ? (
+                {inClinicData?.filter((item) => item.status === 2).length !==
+                0 ? (
                   inClinicData
-                    ?.filter(
-                      (item) =>
-                        item.status === 2 &&
-                        item.mapping_id === mapping_id &&
-                        item.availability_id === session?.value
-                    )
+                    ?.filter((item) => item.status === 2)
                     .map((item, index) => {
                       return (
                         <Patient
@@ -208,12 +178,8 @@ const LiveQueue = ({ mapping_id }: { mapping_id: string }) => {
               </div>
               <p className=" font-semibold text-xl">Next in Queue</p>
               <div>
-                {inClinicData?.filter(
-                  (item) =>
-                    item.status === 1 &&
-                    item.mapping_id === mapping_id &&
-                    item.availability_id === session?.value
-                ).length !== 0 ? (
+                {inClinicData?.filter((item) => item.status === 1).length !==
+                0 ? (
                   inClinicData
                     ?.filter((item) => item.status === 1)
                     .map((item, index) => {
