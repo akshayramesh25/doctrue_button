@@ -31,17 +31,19 @@ const Patient = ({
     return (
       <div className="bg-green flex flex-row justify-center items-center p-5 my-5 mx-36 rounded-xl">
         {(queue_type === "Token" || queue_type === "Slot_Token") && (
-          <p
-            className={`text-2xl ${
-              queue_type === "Token" || queue_type === "Slot_Token"
-                ? "flex-[0.7] ml-20"
-                : "flex-1"
-            }`}
-          >
+          <p className="text-white flex-[0.3] text-3xl font-semibold">
             Token {pos}
           </p>
         )}
-        <p className="text-white flex-[0.7] text-2xl ml-20">{name}</p>
+        <p
+          className={`text-2xl text-white ${
+            queue_type === "Token" || queue_type === "Slot_Token"
+              ? "flex-[0.7] ml-20"
+              : "flex-1"
+          }`}
+        >
+          {name}
+        </p>
       </div>
     );
   }

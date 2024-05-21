@@ -104,7 +104,7 @@ const LiveQueue = ({ mapping_id }: { mapping_id: string }) => {
             queue_type: item.queue_type,
           };
         });
-      console.log("currSession", currSession);
+      // console.log("currSession", currSession);
       setSession(currSession && currSession[0]);
       fetchQueueData();
     }
@@ -152,7 +152,7 @@ const LiveQueue = ({ mapping_id }: { mapping_id: string }) => {
 
   return (
     <div>
-      <p className="mt-3 text-black font-medium text-3xl">
+      <p className="mt-3 text-black font-semibold text-3xl">
         Dr. {docDetails?.full_name}
       </p>
       <p>{session?.label}</p>

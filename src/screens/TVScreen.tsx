@@ -14,7 +14,7 @@ const TVScreen = () => {
   const navigate = useNavigate();
 
   const [time, setTime] = useState(moment().format("hh:mm A"));
-  console.log("doctors", doctors);
+  // console.log("doctors", doctors);
 
   useInterval(async () => {
     setTime(moment().format("hh:mm A"));
