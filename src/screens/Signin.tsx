@@ -20,7 +20,7 @@ const Signin = () => {
         navigate("/admin");
       } else {
         setHospitalID(allHospData[0]?.hospital_id);
-        navigate(allHospData[0]?.hospital_id + "/dashboard");
+        navigate("/" + allHospData[0]?.hospital_id);
       }
     }
   }, [userData, allHospData, navigate]);

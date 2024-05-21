@@ -4,10 +4,12 @@ import { useUserData } from "../lib/contexts/UserContext";
 import HospitalCard from "../components/HospitalCard";
 import Loader from "../components/Loader";
 import { useHospDocData } from "../lib/contexts/HospitalDoctorContext";
+import { useNavigate } from "react-router-dom";
 
 const ChooseHosp = () => {
   const { userData } = useUserData();
-  const { allHospData } = useHospDocData();
+  const { allHospData, setHospitalID } = useHospDocData();
+  const navigate = useNavigate();
 
   return (
     <div className="flex flex-col w-full justify-center items-center pt-14 pb-40">
@@ -21,10 +23,14 @@ const ChooseHosp = () => {
         {allHospData?.map((hospital) => (
           <HospitalCard
             key={hospital.hospital_id}
-            id={hospital.hospital_id}
             name={hospital.hospital_name}
             docCount={hospital.number_of_doctors}
             logo={hospital.logo}
+            handlePress={() => {
+              console.log(hospital.hospital_name);
+              setHospitalID(hospital.hospital_id);
+              navigate("/" + hospital.hospital_id);
+            }}
           />
         ))}
       </div>

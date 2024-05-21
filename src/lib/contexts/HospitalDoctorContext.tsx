@@ -15,8 +15,10 @@ interface HospDocDataContextInterface {
   setAllHospData: React.Dispatch<React.SetStateAction<Hospital[] | undefined>>;
   hospData: Hospital | undefined;
   setHospData: React.Dispatch<React.SetStateAction<Hospital | undefined>>;
-  doctorsData: Doctor[] | undefined;
-  setDoctorsData: React.Dispatch<React.SetStateAction<Doctor[] | undefined>>;
+  allDoctorsData: Doctor[] | undefined;
+  setAllDoctorsData: React.Dispatch<React.SetStateAction<Doctor[] | undefined>>;
+  doctors: Doctor[] | undefined;
+  setDoctors: React.Dispatch<React.SetStateAction<Doctor[] | undefined>>;
   docDetails: Doctor | undefined;
   setDocDetails: React.Dispatch<React.SetStateAction<Doctor | undefined>>;
 }
@@ -39,7 +41,8 @@ const HospDocContext = ({ children }: HospDocDataProviderProps) => {
   const [hospitalID, setHospitalID] = useState<string>(hospital_id);
   const [allHospData, setAllHospData] = useState<Hospital[]>();
   const [hospData, setHospData] = useState<Hospital>();
-  const [doctorsData, setDoctorsData] = useState<Array<Doctor>>();
+  const [allDoctorsData, setAllDoctorsData] = useState<Doctor[]>();
+  const [doctors, setDoctors] = useState<Doctor[]>();
   const [docDetails, setDocDetails] = useState<Doctor>();
 
   useEffect(() => {
@@ -57,7 +60,7 @@ const HospDocContext = ({ children }: HospDocDataProviderProps) => {
               setHospData(hosp_data.data.result);
               const doc_data = await getDoctorListByHospitalId(hospitalID);
               if (doc_data?.status === 200)
-                setDoctorsData(doc_data.data.result);
+                setAllDoctorsData(doc_data.data.result);
             }
           }
         } else if (all_hosp_data?.status === 401) {
@@ -79,14 +82,14 @@ const HospDocContext = ({ children }: HospDocDataProviderProps) => {
               if (hosp_data?.status === 200) setHospData(hosp_data.data.result);
               const doc_data = await getDoctorListByHospitalId(hospitalID);
               if (doc_data?.status === 200)
-                setDoctorsData(doc_data.data.result);
+                setAllDoctorsData(doc_data.data.result);
             }
           }
         }
       } else if (userData === undefined) {
         setAllHospData(undefined);
         setHospData(undefined);
-        setDoctorsData(undefined);
+        setAllDoctorsData(undefined);
       }
     };
 
@@ -102,8 +105,10 @@ const HospDocContext = ({ children }: HospDocDataProviderProps) => {
         setAllHospData,
         hospData,
         setHospData,
-        doctorsData,
-        setDoctorsData,
+        allDoctorsData,
+        setAllDoctorsData,
+        doctors,
+        setDoctors,
         docDetails,
         setDocDetails,
       }}

@@ -1,21 +1,28 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Carousel } from "react-responsive-carousel";
 import moment from "moment";
 import LiveQueue from "./LiveQueue";
-import { useInterval } from "../lib/useInterval";
 import Loader from "../components/Loader";
 import { useUserData } from "../lib/contexts/UserContext";
 import { useHospDocData } from "../lib/contexts/HospitalDoctorContext";
+import { useInterval } from "../lib/utils/useInterval";
+import { useNavigate } from "react-router-dom";
 
-const AllDoctors = () => {
+const TVScreen = () => {
   const { userData } = useUserData();
-  const { doctorsData } = useHospDocData();
+  const { hospitalID, doctors } = useHospDocData();
+  const navigate = useNavigate();
+
   const [time, setTime] = useState(moment().format("hh:mm A"));
-  console.log("doctorsData", doctorsData);
+  console.log("doctors", doctors);
 
   useInterval(async () => {
     setTime(moment().format("hh:mm A"));
   }, 60000);
+
+  useEffect(() => {
+    if (doctors === undefined) navigate("/" + hospitalID);
+  }, [doctors]);
 
   return (
     <>
@@ -23,11 +30,15 @@ const AllDoctors = () => {
         <div className="flex flex-col h-screen">
           <div className="flex flex-row justify-between mt-5">
             <p className="font-semibold text-3xl ml-10">{time}</p>
-            <img
-              src={require("../assets/images/DTlogo.png")}
-              alt="Queue empty"
+            <button
+              onClick={() => navigate("/admin")}
               className="w-[10%] mr-10"
-            />
+            >
+              <img
+                src={require("../assets/images/DTlogo.png")}
+                alt="Queue empty"
+              />
+            </button>
           </div>
           <Carousel
             autoPlay
@@ -37,7 +48,7 @@ const AllDoctors = () => {
             showStatus={false}
             showIndicators={false}
           >
-            {doctorsData?.map((doc, index) => (
+            {doctors?.map((doc, index) => (
               <LiveQueue key={index} mapping_id={doc.mapping_id} />
             ))}
           </Carousel>
@@ -49,4 +60,4 @@ const AllDoctors = () => {
   );
 };
 
-export default AllDoctors;
+export default TVScreen;
