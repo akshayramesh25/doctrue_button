@@ -181,6 +181,7 @@ const LiveQueue = ({ mapping_id }: { mapping_id: string }) => {
                           key={index}
                           pos={item.token_number}
                           name={item.full_name}
+                          queue_type={session?.queue_type}
                         />
                       );
                     })

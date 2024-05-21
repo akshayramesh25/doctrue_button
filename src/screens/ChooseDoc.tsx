@@ -39,8 +39,8 @@ const ChooseDoc = () => {
         <button
           className="min-w-[320px] md:min-w-[360px] shadow-md rounded-lg hover:opacity-70"
           onClick={() => {
-            navigate("/" + hospitalID + "/tvscreen");
             setDoctors(allDoctorsData);
+            navigate("/" + hospitalID + "/tvscreen");
           }}
         >
           <div className="flex flex-row items-center bg-white p-5 rounded-lg border-b-[1px] border-doctorsBorder">
