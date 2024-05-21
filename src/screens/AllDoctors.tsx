@@ -1,14 +1,17 @@
 import React, { useState } from "react";
 import { Carousel } from "react-responsive-carousel";
-import { Logo } from "../assets/icons/Icons";
 import moment from "moment";
-import { useData } from "../lib/Context";
 import LiveQueue from "./LiveQueue";
 import { useInterval } from "../lib/useInterval";
+import Loader from "../components/Loader";
+import { useUserData } from "../lib/contexts/UserContext";
+import { useHospDocData } from "../lib/contexts/HospitalDoctorContext";
 
-const TVScreen = () => {
-  const { hospData, doctorsData } = useData();
+const AllDoctors = () => {
+  const { userData } = useUserData();
+  const { doctorsData } = useHospDocData();
   const [time, setTime] = useState(moment().format("hh:mm A"));
+  console.log("doctorsData", doctorsData);
 
   useInterval(async () => {
     setTime(moment().format("hh:mm A"));
@@ -16,7 +19,7 @@ const TVScreen = () => {
 
   return (
     <>
-      {hospData !== undefined ? (
+      {userData !== undefined ? (
         <div className="flex flex-col h-screen">
           <div className="flex flex-row justify-between mt-5">
             <p className="font-semibold text-3xl ml-10">{time}</p>
@@ -40,14 +43,10 @@ const TVScreen = () => {
           </Carousel>
         </div>
       ) : (
-        <div className="bg-selectedTareek backdrop-blur-sm absolute flex justify-center items-center h-screen w-full top-0 bottom-0 left-0 right-0">
-          <div className="animate-pulse">
-            <Logo />
-          </div>
-        </div>
+        <Loader />
       )}
     </>
   );
 };
 
-export default TVScreen;
+export default AllDoctors;

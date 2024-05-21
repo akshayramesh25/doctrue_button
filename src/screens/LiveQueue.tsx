@@ -1,22 +1,29 @@
 import React, { useState, useEffect } from "react";
-import Patient from "../components/Patient";
-import { useData } from "../lib/Context";
-import {
-  getDoctorAvailability,
-  getQueueByMappingId,
-  hitRefreshToken,
-} from "../lib/apis";
-import { DocAvailabilityData, DocProfileData, QueueData } from "../lib/types";
-import moment from "moment";
-import { useInterval } from "../lib/useInterval";
 import { useNavigate } from "react-router-dom";
+import moment from "moment";
+
+import Patient from "../components/Patient";
+import { useInterval } from "../lib/useInterval";
 import { deleteCookie, setCookie } from "../lib/funcs";
+import { getCookie } from "../lib/utils/cookies";
+import { useHospDocData } from "../lib/contexts/HospitalDoctorContext";
+import { getDoctorAvailability } from "../lib/apis/doctor";
+import { hitRefreshToken } from "../lib/apis/user";
+import { getBookingListByAvailabilityId } from "../lib/apis/booking";
+import { DocProfileData, QueueData } from "../lib/types";
+import { DocAvailability } from "../lib/utils/types";
 
 const LiveQueue = ({ mapping_id }: { mapping_id: string }) => {
-  const { accessToken, refreshToken, hospData, SelectedDate, setSelectedDate } =
-    useData();
+  const { hospData } = useHospDocData();
+  const accessToken = String(getCookie("accessToken"));
+  const refreshToken = String(getCookie("refreshToken"));
+  const navigate = useNavigate();
+
   const [docDetails, setDocDetails] = useState<DocProfileData>();
-  const [docAvail, setDocAvail] = useState<DocAvailabilityData[]>();
+  const [docAvail, setDocAvail] = useState<DocAvailability[]>();
+  const [SelectedDate, setSelectedDate] = useState(
+    moment().format("YYYY-MM-DD")
+  );
   const [index, setIndex] = useState<number | undefined>(moment().day() + 1);
   const [inClinicData, setInClinicData] = useState<Array<QueueData>>();
   const [session, setSession] = useState<{
@@ -25,16 +32,17 @@ const LiveQueue = ({ mapping_id }: { mapping_id: string }) => {
     start_time: moment.Moment;
     end_time: moment.Moment;
   }>();
-  const navigate = useNavigate();
+  const [queue_type, setQueue_type] = useState("");
 
   const fetchQueueData = async () => {
-    const inclinic_data = await getQueueByMappingId(mapping_id, SelectedDate);
+    const inclinic_data = await getBookingListByAvailabilityId(
+      session?.value,
+      SelectedDate
+    );
     if (inclinic_data?.status === 200) {
       setInClinicData(
         inclinic_data.data.result.filter(
-          (item: QueueData) =>
-            item.mapping_id === mapping_id &&
-            item.availability_id === session?.value
+          (item: QueueData) => item.status === 1 || item.status === 2
         )
       );
     } else setInClinicData(undefined);
@@ -49,6 +57,7 @@ const LiveQueue = ({ mapping_id }: { mapping_id: string }) => {
     const fetchDocAvailability = async () => {
       const res = await getDoctorAvailability(mapping_id);
       if (res?.status === 200) {
+        // console.log(res.data.result);
         setDocAvail(res.data.result.doctor_availability);
         setDocDetails(res.data.result.doctor_details);
       } else if (res?.status === 401) {
@@ -94,23 +103,27 @@ const LiveQueue = ({ mapping_id }: { mapping_id: string }) => {
               "minutes"
             ),
             end_time: moment(item.end_time, "HH:mm:ss").add(30, "minutes"),
+            queue_type: item.queue_type,
           };
         });
       setSession(currSession && currSession[0]);
       fetchQueueData();
+      setQueue_type(currSession && currSession[0].queue_type);
     }
   }, [, SelectedDate, docAvail]);
 
   useInterval(async () => {
     if (moment().isBetween(session?.start_time, session?.end_time)) {
-      const res = await getQueueByMappingId(mapping_id, SelectedDate);
+      const res = await getBookingListByAvailabilityId(
+        session?.value,
+        SelectedDate
+      );
       if (res?.status === 200) {
+        // console.log(res.data.result);
         console.log("fetch");
         setInClinicData(
           res.data.result.filter(
-            (item: QueueData) =>
-              item.mapping_id === mapping_id &&
-              item.availability_id === session?.value
+            (item: QueueData) => item.status === 1 || item.status === 2
           )
         );
       } else if (res?.status === 401) {
@@ -119,13 +132,14 @@ const LiveQueue = ({ mapping_id }: { mapping_id: string }) => {
           console.log("Refresh");
           setCookie("accessToken", refresh_data.data.result.access_token, 30);
           setCookie("refreshToken", refresh_data.data.result.refresh_token, 30);
-          const api_data = await getQueueByMappingId(mapping_id, SelectedDate);
+          const api_data = await getBookingListByAvailabilityId(
+            session?.value,
+            SelectedDate
+          );
           if (api_data?.status === 200)
             setInClinicData(
               api_data.data.result.filter(
-                (item: QueueData) =>
-                  item.mapping_id === mapping_id &&
-                  item.availability_id === session?.value
+                (item: QueueData) => item.status === 1 || item.status === 2
               )
             );
         } else {
@@ -189,6 +203,7 @@ const LiveQueue = ({ mapping_id }: { mapping_id: string }) => {
                             key={index}
                             pos={item.token_number}
                             name={item.full_name}
+                            queue_type={queue_type}
                           />
                         );
                     })

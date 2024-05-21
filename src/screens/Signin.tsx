@@ -2,21 +2,28 @@ import React, { useEffect, useState } from "react";
 import { Logo, Visibility, VisibilityOff } from "../assets/icons/Icons";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
-import { useData } from "../lib/Context";
+import { useUserData } from "../lib/contexts/UserContext";
+import { useHospDocData } from "../lib/contexts/HospitalDoctorContext";
 
 const Signin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [visible, setVisible] = useState(false);
 
-  const { handleLogin, hospData } = useData();
+  const { handleLogin, userData } = useUserData();
+  const { allHospData, setHospitalID } = useHospDocData();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (hospData) {
-      navigate("/tvscreen");
+    if (allHospData) {
+      if (allHospData.length > 1) {
+        navigate("/admin");
+      } else {
+        setHospitalID(allHospData[0]?.hospital_id);
+        navigate(allHospData[0]?.hospital_id + "/dashboard");
+      }
     }
-  }, [hospData, navigate]);
+  }, [userData, allHospData, navigate]);
 
   return (
     <div className="flex flex-row w-full h-screen">
