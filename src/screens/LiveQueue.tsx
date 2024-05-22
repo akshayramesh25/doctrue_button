@@ -38,10 +38,12 @@ const LiveQueue = ({ mapping_id }: { mapping_id: string }) => {
       SelectedDate
     );
     if (inclinic_data?.status === 200) {
+      // console.log(inclinic_data.data.result);
+      const data: Booking[] = inclinic_data.data.result;
       setInClinicData(
-        inclinic_data.data.result.filter(
-          (item: Booking) => item.status === 1 || item.status === 2
-        )
+        data
+          .sort((a, b) => a.token_number - b.token_number)
+          .filter((item) => item.status === 1 || item.status === 2)
       );
     } else setInClinicData(undefined);
   };
@@ -118,11 +120,12 @@ const LiveQueue = ({ mapping_id }: { mapping_id: string }) => {
       );
       if (res?.status === 200) {
         // console.log(res.data.result);
+        const data: Booking[] = res.data.result;
         console.log("fetch");
         setInClinicData(
-          res.data.result.filter(
-            (item: Booking) => item.status === 1 || item.status === 2
-          )
+          data
+            .sort((a, b) => a.token_number - b.token_number)
+            .filter((item: Booking) => item.status === 1 || item.status === 2)
         );
       } else if (res?.status === 401) {
         const refresh_data = await hitRefreshToken(accessToken, refreshToken);
