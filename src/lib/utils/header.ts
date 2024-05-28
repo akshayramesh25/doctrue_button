@@ -1,4 +1,4 @@
-import { getCookie } from "./funcs";
+import { getCookie } from "./cookies";
 
 export const header = () => {
   const token = String(getCookie("accessToken"));

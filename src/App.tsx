@@ -1,17 +1,24 @@
 import React from "react";
-import "./App.css";
 import { BrowserRouter } from "react-router-dom";
 import AppRoutes from "./AppRoutes";
+import UserContext from "./lib/contexts/UserContext";
+import HospitalDoctorContext from "./lib/contexts/HospitalDoctorContext";
+import PatientBookingContext from "./lib/contexts/PatientBookingContext";
+
+import "./App.css";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import "react-toastify/dist/ReactToastify.css";
-import Context from "./lib/Context";
 
 function App() {
   return (
     <BrowserRouter>
-      <Context>
-        <AppRoutes />
-      </Context>
+      <UserContext>
+        <HospitalDoctorContext>
+          <PatientBookingContext>
+            <AppRoutes />
+          </PatientBookingContext>
+        </HospitalDoctorContext>
+      </UserContext>
     </BrowserRouter>
   );
 }
