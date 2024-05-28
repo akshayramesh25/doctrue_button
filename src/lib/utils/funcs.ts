@@ -1,4 +1,4 @@
-import moment from "moment-timezone";
+import moment from "moment";
 import { EditDaySessions } from "./types";
 
 type FormattedDate = {
@@ -189,9 +189,9 @@ export const addAvailability = (weekSchedule: {
   return finalData;
 };
 
-export function momentIN(dateString?: string) {
-  return moment.tz(dateString, "Asia/Kolkata");
-}
+// export function momentIN(dateString?: string) {
+//   return moment.tz(dateString, "Asia/Kolkata");
+// }
 
 export const generateTimings = (
   slot: string | undefined,

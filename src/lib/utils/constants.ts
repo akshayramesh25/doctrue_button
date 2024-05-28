@@ -1,4 +1,4 @@
-export const baseURL = "https://test.doctrue.in/api/v1";
+export const baseURL = "https://api.doctrue.in/api/v1";
 
 export const DT_DEFAULT_UUID = "30368881-79e2-4ff3-9d7d-c376ea1e8f7e";
 

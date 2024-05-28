@@ -7,6 +7,7 @@ import { Doctor, Hospital } from "../utils/types";
 import { getDoctorListByHospitalId } from "../apis/doctor";
 import { getRouteSegment } from "../utils/funcs";
 import { useNavigate } from "react-router-dom";
+import moment from "moment";
 
 interface HospDocDataContextInterface {
   hospitalID: string | undefined;
@@ -59,8 +60,16 @@ const HospDocContext = ({ children }: HospDocDataProviderProps) => {
             if (hosp_data?.status === 200) {
               setHospData(hosp_data.data.result);
               const doc_data = await getDoctorListByHospitalId(hospitalID);
-              if (doc_data?.status === 200)
-                setAllDoctorsData(doc_data.data.result);
+              if (doc_data?.status === 200) {
+                const docs: Doctor[] = doc_data.data.result;
+                setAllDoctorsData(
+                  docs?.sort(
+                    (a, b) =>
+                      moment(a.created_at).valueOf() -
+                      moment(b.created_at).valueOf()
+                  )
+                );
+              }
             }
           }
         } else if (all_hosp_data?.status === 401) {
@@ -81,8 +90,16 @@ const HospDocContext = ({ children }: HospDocDataProviderProps) => {
               const hosp_data = await getHosptialDetails(hospitalID);
               if (hosp_data?.status === 200) setHospData(hosp_data.data.result);
               const doc_data = await getDoctorListByHospitalId(hospitalID);
-              if (doc_data?.status === 200)
-                setAllDoctorsData(doc_data.data.result);
+              if (doc_data?.status === 200) {
+                const docs: Doctor[] = doc_data.data.result;
+                setAllDoctorsData(
+                  docs?.sort(
+                    (a, b) =>
+                      moment(a.created_at).valueOf() -
+                      moment(b.created_at).valueOf()
+                  )
+                );
+              }
             }
           }
         }

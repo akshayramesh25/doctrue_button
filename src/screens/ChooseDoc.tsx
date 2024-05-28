@@ -11,6 +11,7 @@ const ChooseDoc = () => {
   const { userData } = useUserData();
   const { hospitalID, hospData, allDoctorsData, setDoctors } = useHospDocData();
   const navigate = useNavigate();
+  console.log(allDoctorsData);
 
   return (
     <div className="flex flex-col w-full justify-center items-center pt-14 pb-40">
@@ -21,25 +22,44 @@ const ChooseDoc = () => {
         </p>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-7 mb-16">
-        {allDoctorsData?.map((doctor) => (
-          <HospitalCard
-            key={doctor.doctor_id}
-            logo={doctor.profile_picture}
-            name={doctor.full_name}
-            docCount={"none"}
-            handlePress={() => {
-              console.log(doctor.full_name);
-              setDoctors([doctor]);
-              navigate("/" + hospitalID + "/tvscreen");
-            }}
-          />
-        ))}
+        {/* Create constant */}
+        {hospitalID === "fa577fb4-6353-44ae-9a41-0d362d0ab5ce"
+          ? allDoctorsData?.slice(0, 2).map((doctor) => (
+              <HospitalCard
+                key={doctor.doctor_id}
+                logo={doctor.profile_picture}
+                name={doctor.full_name}
+                docCount={"none"}
+                handlePress={() => {
+                  console.log(doctor.full_name);
+                  setDoctors([doctor]);
+                  navigate("/" + hospitalID + "/tvscreen");
+                }}
+              />
+            ))
+          : allDoctorsData?.map((doctor) => (
+              <HospitalCard
+                key={doctor.doctor_id}
+                logo={doctor.profile_picture}
+                name={doctor.full_name}
+                docCount={"none"}
+                handlePress={() => {
+                  console.log(doctor.full_name);
+                  setDoctors([doctor]);
+                  navigate("/" + hospitalID + "/tvscreen");
+                }}
+              />
+            ))}
       </div>
       {allDoctorsData && allDoctorsData.length > 1 && (
         <button
           className="min-w-[320px] md:min-w-[360px] shadow-md rounded-lg hover:opacity-70"
           onClick={() => {
-            setDoctors(allDoctorsData);
+            setDoctors(
+              hospitalID === "fa577fb4-6353-44ae-9a41-0d362d0ab5ce"
+                ? allDoctorsData?.slice(0, 2)
+                : allDoctorsData
+            );
             navigate("/" + hospitalID + "/tvscreen");
           }}
         >
