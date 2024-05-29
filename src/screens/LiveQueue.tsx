@@ -153,7 +153,7 @@ const LiveQueue = ({ mapping_id }: { mapping_id: string }) => {
     }
   }, 5000);
 
-  console.log(inClinicData);
+  // console.log(inClinicData);
 
   return (
     <div>
@@ -204,7 +204,6 @@ const LiveQueue = ({ mapping_id }: { mapping_id: string }) => {
                     ?.filter(
                       (item) =>
                         item.status === 1 &&
-                        item.mapping_id === mapping_id &&
                         item.availability_id === session?.value
                     )
                     .map((item, index) => {
