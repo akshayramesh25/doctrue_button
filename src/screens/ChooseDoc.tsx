@@ -51,37 +51,6 @@ const ChooseDoc = () => {
               />
             ))}
       </div>
-      {allDoctorsData && allDoctorsData.length > 1 && (
-        <button
-          className="min-w-[320px] md:min-w-[360px] shadow-md rounded-lg hover:opacity-70"
-          onClick={() => {
-            setDoctors(
-              hospitalID === "fa577fb4-6353-44ae-9a41-0d362d0ab5ce"
-                ? allDoctorsData?.slice(0, 2)
-                : allDoctorsData
-            );
-            navigate("/" + hospitalID + "/tvscreen");
-          }}
-        >
-          <div className="flex flex-row items-center bg-white p-5 rounded-lg border-b-[1px] border-doctorsBorder">
-            {hospData?.logo === "test" ? (
-              <ProfilePicture
-                username={hospData.hospital_name}
-                className="w-14 h-14"
-              />
-            ) : (
-              <img
-                className={`w-14 h-14 rounded-full`}
-                src={hospData?.logo}
-                alt="hospital-logo"
-              ></img>
-            )}
-            <p className="font-semibold text-sbTextHover text-sm md:text-base ml-4">
-              All Doctors
-            </p>
-          </div>
-        </button>
-      )}
 
       {userData === undefined && <Loader />}
     </div>

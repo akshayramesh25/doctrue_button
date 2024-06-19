@@ -7,9 +7,13 @@ import { deleteCookie, getCookie, setCookie } from "../lib/utils/cookies";
 import { useHospDocData } from "../lib/contexts/HospitalDoctorContext";
 import { getDoctorAvailability } from "../lib/apis/doctor";
 import { hitRefreshToken } from "../lib/apis/user";
-import { getBookingListByAvailabilityId } from "../lib/apis/booking";
+import {
+  getBookingListByAvailabilityId,
+  updateBookingStatus,
+} from "../lib/apis/booking";
 import { Booking, DocAvailability, Doctor } from "../lib/utils/types";
 import { useInterval } from "../lib/utils/useInterval";
+import { toast } from "react-toastify";
 
 const LiveQueue = ({ mapping_id }: { mapping_id: string }) => {
   const { hospData } = useHospDocData();
@@ -33,19 +37,42 @@ const LiveQueue = ({ mapping_id }: { mapping_id: string }) => {
   }>();
 
   const fetchQueueData = async () => {
-    const inclinic_data = await getBookingListByAvailabilityId(
+    console.log("fetch");
+    const res = await getBookingListByAvailabilityId(
       session?.value,
       SelectedDate
     );
-    if (inclinic_data?.status === 200) {
-      // console.log(inclinic_data.data.result);
-      const data: Booking[] = inclinic_data.data.result;
+    if (res?.status === 200) {
+      // console.log(res.data.result);
+      const data: Booking[] = res.data.result;
       setInClinicData(
         data
           .sort((a, b) => a.token_number - b.token_number)
-          .filter((item) => item.status === 1 || item.status === 2)
+          .filter((item: Booking) => item.status === 1 || item.status === 2)
       );
-    } else setInClinicData(undefined);
+    } else if (res?.status === 401) {
+      const refresh_data = await hitRefreshToken(accessToken, refreshToken);
+      if (refresh_data?.status === 200) {
+        console.log("Refresh");
+        setCookie("accessToken", refresh_data.data.result.access_token, 30);
+        setCookie("refreshToken", refresh_data.data.result.refresh_token, 30);
+        const api_data = await getBookingListByAvailabilityId(
+          session?.value,
+          SelectedDate
+        );
+        if (api_data?.status === 200)
+          setInClinicData(
+            api_data.data.result.filter(
+              (item: Booking) => item.status === 1 || item.status === 2
+            )
+          );
+      } else {
+        deleteCookie("accessToken");
+        deleteCookie("refreshToken");
+        deleteCookie("userID");
+        navigate("/");
+      }
+    }
   };
 
   useEffect(() => {
@@ -79,8 +106,8 @@ const LiveQueue = ({ mapping_id }: { mapping_id: string }) => {
 
   useEffect(() => {
     if (docAvail !== undefined) {
-      const now = moment();
-      // const now = moment().set({ hour: 11, minute: 0 });
+      // const now = moment();
+      const now = moment().set({ hour: 10, minute: 0 });
       const currSession = docAvail
         .filter((i) => i.day_of_week === index)
         .filter((item) => {
@@ -113,43 +140,12 @@ const LiveQueue = ({ mapping_id }: { mapping_id: string }) => {
   }, [, SelectedDate, docAvail]);
 
   useInterval(async () => {
-    if (moment().isBetween(session?.start_time, session?.end_time)) {
-      const res = await getBookingListByAvailabilityId(
-        session?.value,
-        SelectedDate
-      );
-      if (res?.status === 200) {
-        // console.log(res.data.result);
-        const data: Booking[] = res.data.result;
-        console.log("fetch");
-        setInClinicData(
-          data
-            .sort((a, b) => a.token_number - b.token_number)
-            .filter((item: Booking) => item.status === 1 || item.status === 2)
-        );
-      } else if (res?.status === 401) {
-        const refresh_data = await hitRefreshToken(accessToken, refreshToken);
-        if (refresh_data?.status === 200) {
-          console.log("Refresh");
-          setCookie("accessToken", refresh_data.data.result.access_token, 30);
-          setCookie("refreshToken", refresh_data.data.result.refresh_token, 30);
-          const api_data = await getBookingListByAvailabilityId(
-            session?.value,
-            SelectedDate
-          );
-          if (api_data?.status === 200)
-            setInClinicData(
-              api_data.data.result.filter(
-                (item: Booking) => item.status === 1 || item.status === 2
-              )
-            );
-        } else {
-          deleteCookie("accessToken");
-          deleteCookie("refreshToken");
-          deleteCookie("hospID");
-          navigate("/");
-        }
-      }
+    if (
+      moment()
+        .set({ hour: 10, minute: 0 })
+        .isBetween(session?.start_time, session?.end_time)
+    ) {
+      fetchQueueData();
     }
   }, 5000);
 
@@ -157,12 +153,12 @@ const LiveQueue = ({ mapping_id }: { mapping_id: string }) => {
 
   return (
     <div>
-      <p className="mt-3 text-black font-semibold text-3xl">
+      <p className="mt-3 text-black font-semibold text-xl lg:text-3xl">
         Dr. {docDetails?.full_name}
       </p>
       <p>{session?.label}</p>
       {moment()
-        // .set({ hour: 11, minute: 0 })
+        .set({ hour: 10, minute: 0 })
         .isBetween(session?.start_time, session?.end_time) ? (
         <>
           {inClinicData?.length ? (
@@ -197,26 +193,58 @@ const LiveQueue = ({ mapping_id }: { mapping_id: string }) => {
                 )}
               </div>
               <p className=" font-semibold text-xl">Next in Queue</p>
-              <div>
+              <div className="flex flex-col">
                 {inClinicData?.filter((item) => item.status === 1).length !==
                 0 ? (
-                  inClinicData
-                    ?.filter(
-                      (item) =>
-                        item.status === 1 &&
-                        item.availability_id === session?.value
-                    )
-                    .map((item, index) => {
-                      if (index < 3)
-                        return (
-                          <Patient
-                            key={index}
-                            pos={item.token_number}
-                            name={item.full_name}
-                            queue_type={session?.queue_type}
-                          />
+                  <>
+                    {inClinicData
+                      ?.filter(
+                        (item) =>
+                          item.status === 1 &&
+                          item.availability_id === session?.value
+                      )
+                      .slice(0, 3)
+                      .map((item, index) => (
+                        <Patient
+                          key={index}
+                          pos={item.token_number}
+                          name={item.full_name}
+                          queue_type={session?.queue_type}
+                        />
+                      ))}
+
+                    <button
+                      className="bg-nextPatient flex justify-center items-center p-5 my-10 mx-5 lg:mx-36 rounded-xl text-white text-xl lg:text-2xl"
+                      onClick={async () => {
+                        const onGoingPatient = inClinicData.filter(
+                          (booking) => booking.status === 2
                         );
-                    })
+                        if (onGoingPatient.length !== 0) {
+                          const onGoingID = onGoingPatient[0].booking_id;
+                          console.log(onGoingID);
+                          await updateBookingStatus({
+                            bookingId: onGoingID,
+                            status: 3,
+                          });
+                        }
+                        const sendPatientOnGoing = await updateBookingStatus({
+                          bookingId: inClinicData.filter(
+                            (booking) => booking.status === 1
+                          )[0].booking_id,
+                          status: 2,
+                        });
+                        console.log(sendPatientOnGoing);
+                        if (sendPatientOnGoing?.status === 200) {
+                          toast.success("Next patient called!");
+                          fetchQueueData();
+                        } else {
+                          toast.error(sendPatientOnGoing.data.error);
+                        }
+                      }}
+                    >
+                      Next Patient
+                    </button>
+                  </>
                 ) : (
                   <Patient empty text={"No Patients in the clinic"} />
                 )}

@@ -29,10 +29,12 @@ const TVScreen = () => {
       {userData !== undefined ? (
         <div className="flex flex-col h-screen">
           <div className="flex flex-row justify-between mt-5">
-            <p className="font-semibold text-3xl ml-10">{time}</p>
+            <p className="font-semibold text-xl lg:text-3xl ml-3 lg:ml-10">
+              {time}
+            </p>
             <button
               onClick={() => navigate("/admin")}
-              className="w-[10%] mr-10"
+              className="w-[20%] lg:w-[10%] mr-3 lg:mr-10"
             >
               <img
                 src={require("../assets/images/DTlogo.png")}
