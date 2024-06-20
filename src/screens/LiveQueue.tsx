@@ -106,8 +106,8 @@ const LiveQueue = ({ mapping_id }: { mapping_id: string }) => {
 
   useEffect(() => {
     if (docAvail !== undefined) {
-      // const now = moment();
-      const now = moment().set({ hour: 10, minute: 0 });
+      const now = moment();
+      // const now = moment().set({ hour: 10, minute: 0 });
       const currSession = docAvail
         .filter((i) => i.day_of_week === index)
         .filter((item) => {
@@ -142,7 +142,7 @@ const LiveQueue = ({ mapping_id }: { mapping_id: string }) => {
   useInterval(async () => {
     if (
       moment()
-        .set({ hour: 10, minute: 0 })
+        // .set({ hour: 10, minute: 0 })
         .isBetween(session?.start_time, session?.end_time)
     ) {
       fetchQueueData();
@@ -158,7 +158,7 @@ const LiveQueue = ({ mapping_id }: { mapping_id: string }) => {
       </p>
       <p>{session?.label}</p>
       {moment()
-        .set({ hour: 10, minute: 0 })
+        // .set({ hour: 10, minute: 0 })
         .isBetween(session?.start_time, session?.end_time) ? (
         <>
           {inClinicData?.length ? (
