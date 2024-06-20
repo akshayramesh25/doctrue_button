@@ -213,37 +213,40 @@ const LiveQueue = ({ mapping_id }: { mapping_id: string }) => {
                         />
                       ))}
 
-                    <button
-                      className="bg-nextPatient flex justify-center items-center p-5 my-10 mx-5 lg:mx-36 rounded-xl text-white text-xl lg:text-2xl"
-                      onClick={async () => {
-                        const onGoingPatient = inClinicData.filter(
-                          (booking) => booking.status === 2
-                        );
-                        if (onGoingPatient.length !== 0) {
-                          const onGoingID = onGoingPatient[0].booking_id;
-                          console.log(onGoingID);
-                          await updateBookingStatus({
-                            bookingId: onGoingID,
-                            status: 3,
+                    <div className="relative my-10 mx-5 lg:mx-36 w-44 h-44 lg:w-52 lg:h-52 flex self-center justify-center items-center">
+                      <div className="absolute inset-0 bg-gradient-to-br from-selectedDate to-sbTextHover rounded-full blur-md opacity-75"></div>
+                      <button
+                        className="relative bg-gradient-to-br from-sbTextHover to-selectedDate hover:from-selectedDate hover:to-sbTextHover w-32 h-32 lg:w-44 lg:h-44 rounded-full text-white text-xl lg:text-2xl shadow-lg transform transition-transform duration-200 ease-in-out hover:scale-105 focus:outline-none border-[2px] border-white p-3"
+                        onClick={async () => {
+                          const onGoingPatient = inClinicData.filter(
+                            (booking) => booking.status === 2
+                          );
+                          if (onGoingPatient.length !== 0) {
+                            const onGoingID = onGoingPatient[0].booking_id;
+                            console.log(onGoingID);
+                            await updateBookingStatus({
+                              bookingId: onGoingID,
+                              status: 3,
+                            });
+                          }
+                          const sendPatientOnGoing = await updateBookingStatus({
+                            bookingId: inClinicData.filter(
+                              (booking) => booking.status === 1
+                            )[0].booking_id,
+                            status: 2,
                           });
-                        }
-                        const sendPatientOnGoing = await updateBookingStatus({
-                          bookingId: inClinicData.filter(
-                            (booking) => booking.status === 1
-                          )[0].booking_id,
-                          status: 2,
-                        });
-                        console.log(sendPatientOnGoing);
-                        if (sendPatientOnGoing?.status === 200) {
-                          toast.success("Next patient called!");
-                          fetchQueueData();
-                        } else {
-                          toast.error(sendPatientOnGoing.data.error);
-                        }
-                      }}
-                    >
-                      Next Patient
-                    </button>
+                          console.log(sendPatientOnGoing);
+                          if (sendPatientOnGoing?.status === 200) {
+                            toast.success("Next patient called!");
+                            fetchQueueData();
+                          } else {
+                            toast.error(sendPatientOnGoing.data.error);
+                          }
+                        }}
+                      >
+                        Next Patient
+                      </button>
+                    </div>
                   </>
                 ) : (
                   <Patient empty text={"No Patients in the clinic"} />

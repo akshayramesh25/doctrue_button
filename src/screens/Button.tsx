@@ -8,7 +8,7 @@ import { useHospDocData } from "../lib/contexts/HospitalDoctorContext";
 import { useInterval } from "../lib/utils/useInterval";
 import { useNavigate } from "react-router-dom";
 
-const TVScreen = () => {
+const Button = () => {
   const { userData } = useUserData();
   const { hospitalID, doctors } = useHospDocData();
   const navigate = useNavigate();
@@ -36,10 +36,7 @@ const TVScreen = () => {
               onClick={() => navigate("/admin")}
               className="w-[20%] lg:w-[10%] mr-3 lg:mr-10"
             >
-              <img
-                src={require("../assets/images/DTlogo.png")}
-                alt="Queue empty"
-              />
+              <img src={require("../assets/images/DTlogo.png")} alt="DocTrue" />
             </button>
           </div>
           <Carousel
@@ -62,4 +59,4 @@ const TVScreen = () => {
   );
 };
 
-export default TVScreen;
+export default Button;
