@@ -11,7 +11,7 @@ const AppRoutes = () => {
       <Route path="/" element={<Signin />} />
       <Route path="/admin" element={<ChooseHosp />} />
       <Route path="/:hospital_id" element={<ChooseDoc />} />
-      <Route path="/:hospital_id/tvscreen" element={<TVScreen />} />
+      <Route path="/:hospital_id/next_patient" element={<TVScreen />} />
     </Routes>
   );
 };

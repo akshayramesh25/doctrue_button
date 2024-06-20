@@ -33,7 +33,7 @@ const ChooseDoc = () => {
                 handlePress={() => {
                   console.log(doctor.full_name);
                   setDoctors([doctor]);
-                  navigate("/" + hospitalID + "/tvscreen");
+                  navigate("/" + hospitalID + "/next_patient");
                 }}
               />
             ))
@@ -46,7 +46,7 @@ const ChooseDoc = () => {
                 handlePress={() => {
                   console.log(doctor.full_name);
                   setDoctors([doctor]);
-                  navigate("/" + hospitalID + "/tvscreen");
+                  navigate("/" + hospitalID + "/next_patient");
                 }}
               />
             ))}
