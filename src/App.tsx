@@ -3,7 +3,6 @@ import { BrowserRouter } from "react-router-dom";
 import AppRoutes from "./AppRoutes";
 import UserContext from "./lib/contexts/UserContext";
 import HospitalDoctorContext from "./lib/contexts/HospitalDoctorContext";
-import PatientBookingContext from "./lib/contexts/PatientBookingContext";
 
 import "./App.css";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
@@ -15,10 +14,8 @@ function App() {
     <BrowserRouter>
       <UserContext>
         <HospitalDoctorContext>
-          <PatientBookingContext>
-            <ToastContainer />
-            <AppRoutes />
-          </PatientBookingContext>
+          <ToastContainer />
+          <AppRoutes />
         </HospitalDoctorContext>
       </UserContext>
     </BrowserRouter>

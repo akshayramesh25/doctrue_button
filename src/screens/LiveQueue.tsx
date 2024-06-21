@@ -213,37 +213,72 @@ const LiveQueue = ({ mapping_id }: { mapping_id: string }) => {
                         />
                       ))}
 
-                    <button
-                      className="bg-nextPatient flex justify-center items-center p-5 my-10 mx-5 lg:mx-36 rounded-xl text-white text-xl lg:text-2xl"
-                      onClick={async () => {
-                        const onGoingPatient = inClinicData.filter(
-                          (booking) => booking.status === 2
-                        );
-                        if (onGoingPatient.length !== 0) {
-                          const onGoingID = onGoingPatient[0].booking_id;
-                          console.log(onGoingID);
-                          await updateBookingStatus({
-                            bookingId: onGoingID,
-                            status: 3,
-                          });
-                        }
-                        const sendPatientOnGoing = await updateBookingStatus({
-                          bookingId: inClinicData.filter(
+                    <div className="relative my-10 mx-5 lg:mx-36 w-44 h-44 lg:w-52 lg:h-52 flex self-center justify-center items-center">
+                      <button
+                        className="relative bg-gradient-to-br from-sbTextHover to-selectedDate hover:from-selectedDate hover:to-sbTextHover w-40 h-40 lg:w-52 lg:h-52 rounded-full text-white text-xl lg:text-2xl shadow-2xl transform transition-transform duration-200 ease-in-out hover:scale-105 focus:outline-none border-[2px] border-white p-3 uppercase"
+                        onClick={async () => {
+                          const onGoingPatient = inClinicData.filter(
+                            (booking) => booking.status === 2
+                          );
+                          if (onGoingPatient.length !== 0) {
+                            const onGoingID = onGoingPatient[0].booking_id;
+                            await updateBookingStatus({
+                              bookingId: onGoingID,
+                              status: 3,
+                            });
+                          }
+
+                          const patientOnGoing = inClinicData.filter(
                             (booking) => booking.status === 1
-                          )[0].booking_id,
-                          status: 2,
-                        });
-                        console.log(sendPatientOnGoing);
-                        if (sendPatientOnGoing?.status === 200) {
-                          toast.success("Next patient called!");
-                          fetchQueueData();
-                        } else {
-                          toast.error(sendPatientOnGoing.data.error);
-                        }
-                      }}
-                    >
-                      Next Patient
-                    </button>
+                          )[0];
+                          const sendPatientOnGoing = await updateBookingStatus({
+                            bookingId: patientOnGoing.booking_id,
+                            status: 2,
+                          });
+                          console.log(sendPatientOnGoing);
+                          if (sendPatientOnGoing?.status === 200) {
+                            toast.success("Next patient called!");
+                            const text = `Next patient is ${patientOnGoing.full_name}`;
+                            const utterance = new SpeechSynthesisUtterance(
+                              text
+                            );
+
+                            // Function to set a female voice
+                            const setFemaleVoice = () => {
+                              const voices = window.speechSynthesis.getVoices();
+                              const femaleVoice = voices.find((voice) =>
+                                [
+                                  "female",
+                                  "woman",
+                                  "girl",
+                                  "samantha",
+                                  "google us english",
+                                ].some((keyword) =>
+                                  voice.name.toLowerCase().includes(keyword)
+                                )
+                              );
+                              if (femaleVoice) {
+                                utterance.voice = femaleVoice;
+                              }
+                              window.speechSynthesis.speak(utterance);
+                            };
+
+                            // Ensure voices are loaded before selecting
+                            window.speechSynthesis.onvoiceschanged =
+                              setFemaleVoice;
+                            if (window.speechSynthesis.getVoices().length > 0) {
+                              setFemaleVoice();
+                            }
+
+                            fetchQueueData();
+                          } else {
+                            toast.error(sendPatientOnGoing.data.error);
+                          }
+                        }}
+                      >
+                        Next Patient
+                      </button>
+                    </div>
                   </>
                 ) : (
                   <Patient empty text={"No Patients in the clinic"} />
