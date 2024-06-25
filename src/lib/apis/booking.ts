@@ -20,7 +20,7 @@ export const getBookingListByHospitalId = async (id: string | undefined) => {
     });
     return res;
   } catch (error: any) {
-    if (error.response || error.response.status === 401) {
+    if (error.response || error.response.status === 403) {
       return error.response;
     } else {
       console.error(error);
@@ -175,7 +175,7 @@ export const getOnGoing = async (
     });
     return res;
   } catch (error: any) {
-    if (error.response || error.response.status === 401) {
+    if (error.response || error.response.status === 403) {
       return error.response;
     } else {
       console.error(error);

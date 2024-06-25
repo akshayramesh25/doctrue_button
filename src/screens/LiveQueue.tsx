@@ -50,7 +50,7 @@ const LiveQueue = ({ mapping_id }: { mapping_id: string }) => {
           .sort((a, b) => a.token_number - b.token_number)
           .filter((item: Booking) => item.status === 1 || item.status === 2)
       );
-    } else if (res?.status === 401) {
+    } else if (res?.status === 403) {
       const refresh_data = await hitRefreshToken(accessToken, refreshToken);
       if (refresh_data?.status === 200) {
         console.log("Refresh");
@@ -87,7 +87,7 @@ const LiveQueue = ({ mapping_id }: { mapping_id: string }) => {
         // console.log(res.data.result);
         setDocAvail(res.data.result.doctor_availability);
         setDocDetails(res.data.result.doctor_details);
-      } else if (res?.status === 401) {
+      } else if (res?.status === 403) {
         const refresh_data = await hitRefreshToken(accessToken, refreshToken);
         if (refresh_data?.status === 200) {
           console.log("Refresh");
