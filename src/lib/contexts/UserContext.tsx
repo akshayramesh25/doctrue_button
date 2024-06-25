@@ -40,7 +40,7 @@ const UserContext = ({ children }: UserDataProviderProps) => {
 
         if (user_data?.status === 200) {
           setUserData(user_data.data.result);
-        } else if (user_data?.status === 401) {
+        } else if (user_data?.status === 403) {
           const refresh_data = await hitRefreshToken(accessToken, refreshToken);
           if (refresh_data?.status === 200) {
             console.log("Refresh");

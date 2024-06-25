@@ -72,7 +72,7 @@ const HospDocContext = ({ children }: HospDocDataProviderProps) => {
               }
             }
           }
-        } else if (all_hosp_data?.status === 401) {
+        } else if (all_hosp_data?.status === 403) {
           const refresh_data = await hitRefreshToken(accessToken, refreshToken);
           if (refresh_data?.status === 200) {
             console.log("Refresh");

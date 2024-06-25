@@ -10,7 +10,7 @@ export const getDoctorListByHospitalId = async (id: string | undefined) => {
     });
     return res;
   } catch (error: any) {
-    if (error.response || error.response.status === 401) {
+    if (error.response || error.response.status === 403) {
       return error.response;
     } else {
       console.error(error);
@@ -29,7 +29,7 @@ export const getDoctorAvailability = async (mapping_id: string) => {
     );
     return res;
   } catch (error: any) {
-    if (error.response || error.response.status === 401) {
+    if (error.response || error.response.status === 403) {
       return error.response;
     } else {
       console.error(error);

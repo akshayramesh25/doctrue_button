@@ -53,7 +53,7 @@ const PatientBookingContext = ({ children }: PatientBookingProviderProps) => {
         const appointment_data = await getBookingListByHospitalId(hospitalID);
         if (appointment_data?.status === 200) {
           setAppointmentsData(appointment_data.data.result);
-        } else if (appointment_data?.status === 401) {
+        } else if (appointment_data?.status === 403) {
           const refresh_data = await hitRefreshToken(accessToken, refreshToken);
           if (refresh_data?.status === 200) {
             console.log("Refresh");

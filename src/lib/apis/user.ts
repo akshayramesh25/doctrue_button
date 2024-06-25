@@ -24,7 +24,7 @@ export const getUserDetails = async (user_id: string) => {
     });
     return res;
   } catch (error: any) {
-    if (error.response || error.response.status === 401) {
+    if (error.response || error.response.status === 403) {
       return error.response;
     } else {
       console.error(error);
@@ -44,7 +44,7 @@ export const updateUserPassword = async (user_id: string, password: string) => {
     );
     return res;
   } catch (error: any) {
-    if (error.response || error.response.status === 401) {
+    if (error.response || error.response.status === 403) {
       return error.response;
     } else {
       console.error(error);
@@ -64,7 +64,7 @@ export const hitRefreshToken = async (
     });
     return res;
   } catch (error: any) {
-    if (error.response || error.response.status === 401) {
+    if (error.response || error.response.status === 403) {
       return error.response;
     } else {
       console.error(error);
